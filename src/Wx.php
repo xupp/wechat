@@ -41,6 +41,11 @@ class Wx extends Error{
         }
     }
 
+    //返回用户传过来解析后的数据
+    public function getMessage(){
+        return $this->object;
+    }
+
     //获取并解析用户传过来的数据
     private function parsePostRequestData(){
         $postStr = isset($GLOBALS['HTTP_RAW_POST_DATA']) && !empty($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
