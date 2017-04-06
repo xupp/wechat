@@ -16,34 +16,34 @@ class Custom extends Wx{
         $this->url = $this->apiUrl.'/cgi-bin/message/custom/send?access_token='.$this->getAccessToken();
     }
     //添加客服账号
-    public function addCustom($account,$nickname,$password){
+    public function addCustom($arr = []){
         $url = $this->apiUrl.'/customservice/kfaccount/add?access_token='.$this->getAccessToken();
         $data = '{
-                     "kf_account" : "'.$account.'",
-                     "nickname" : "'.$nickname.'",
-                     "password" : "'.md5($password).'",
+                     "kf_account" : "'.$arr['account'].'",
+                     "nickname" : "'.$arr['nickname'].'",
+                     "password" : "'.md5($arr['password']).'",
                 }';
         $result = $this->curl($url,$data);
         return $this->get($result);
     }
     //修改客服帐号
-    public function updateCustom($account,$nickname,$password){
+    public function updateCustom($arr = []){
         $url = $this->apiUrl.'/customservice/kfaccount/update?access_token='.$this->getAccessToken();
         $data = '{
-                     "kf_account" : "'.$account.'",
-                     "nickname" : "'.$nickname.'",
-                     "password" : "'.md5($password).'",
+                     "kf_account" : "'.$arr['account'].'",
+                     "nickname" : "'.$arr['nickname'].'",
+                     "password" : "'.md5($arr['password']).'",
                 }';
         $result = $this->curl($url,$data);
         return $this->get($result);
     }
     //删除客服帐号
-    public function deleteCustom($account,$nickname,$password){
+    public function deleteCustom($arr = []){
         $url = $this->apiUrl.'/customservice/kfaccount/del?access_token='.$this->getAccessToken();
         $data = '{
-                     "kf_account" : "'.$account.'",
-                     "nickname" : "'.$nickname.'",
-                     "password" : "'.md5($password).'",
+                     "kf_account" : "'.$arr['account'].'",
+                     "nickname" : "'.$arr['nickname'].'",
+                     "password" : "'.md5($arr['password']).'",
                 }';
         $result = $this->curl($url,$data);
         return $this->get($result);
@@ -69,6 +69,24 @@ class Custom extends Wx{
         $url = $this->apiUrl.'/cgi-bin/customservice/getkflist?access_token='.$this->getAccessToken();
         $result = $this->curl($url);
         return $this->get($result);
+    }
+    //转接到客服
+    public function transferCustomer($kfAccount = ''){
+        $kfAccountStr = '';
+        if(!empty($kfAccount)){
+            $kfAccountStr .= '<TransInfo>
+                                <KfAccount><![CDATA['.$kfAccount.']]></KfAccount>
+                             </TransInfo>';
+        }
+        $xml = ' <xml>
+                 <ToUserName><![CDATA[%s]]></ToUserName>
+                 <FromUserName><![CDATA[%s]]></FromUserName>
+                 <CreateTime>%s</CreateTime>
+                 <MsgType><![CDATA[transfer_customer_service]]></MsgType>
+                 '.$kfAccountStr.'
+             </xml>';
+        $text = sprintf($xml,$this->object->FromUserName,$this->object->ToUserName,time());
+        echo $text;
     }
      /*===============发送客服消息===============*/
     //文本消息
@@ -154,7 +172,7 @@ class Custom extends Wx{
                      "title":"'.$item['title'].'",
                      "description":"'.$item['description'].'",
                      "url":"'.$item['url'].'",
-                     "picurl":"'.$item['picurl'].'"
+                     "picurl":"'.$item['picUrl'].'"
                  },';
         }
 

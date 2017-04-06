@@ -9,9 +9,9 @@ namespace wechat;
 
 class Wx extends Error{
 
-    static $config = [];//配置项
+    public static $config = [];//配置项
     protected $object;//微信发过来的内容
-    protected $apiUrl;//公众平台接口域名
+    protected $apiUrl = 'https://api.weixin.qq.com';//公众平台接口域名
     public $access_token;//access_token是公众号的全局唯一接口调用凭据，公众号调用各接口时都需使用access_token
 
 
@@ -19,7 +19,6 @@ class Wx extends Error{
         if(!empty($config)){
             self::$config = $config;
         }
-        $this->apiUrl = 'https://api.weixin.qq.com';
         $this->object = $this->parsePostRequestData();
     }
 
@@ -41,18 +40,18 @@ class Wx extends Error{
         }
     }
 
-    //返回用户传过来解析后的数据
-    public function getMessage(){
-        return $this->object;
-    }
-
     //获取并解析用户传过来的数据
     private function parsePostRequestData(){
         $postStr = isset($GLOBALS['HTTP_RAW_POST_DATA']) && !empty($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
-        //file_put_contents('./post.php',$postStr);
-        if(!empty($postStr)){
-            return simplexml_load_string($postStr,'SimpleXMLElement',LIBXML_NOCDATA);
+        if($this->xml_parse($postStr)){
+            if(!empty($postStr)){
+                return simplexml_load_string($postStr,'SimpleXMLElement',LIBXML_NOCDATA);
+            }
         }
+    }
+
+    public function getObject(){
+        return $this->object;
     }
 
     //获取access_token
@@ -69,7 +68,7 @@ class Wx extends Error{
             if(isset($data['errcode'])){
                 return false;
             }
-            file_put_contents($file,"<?php return \r\n".var_export($data,true).";?>");
+            file_put_contents($file,"<?php return \r\n".var_export($data,true).";\r\n?>");
         }
         return $data['access_token'];
     }
@@ -94,20 +93,29 @@ class Wx extends Error{
         }
         $data = '';
         if(curl_exec($ch)){
-            if(curl_errno($ch))
-            {
+            if(curl_errno($ch)){
                 echo 'Curl error: ' . curl_error($ch);
                 exit;
             }
             //发送成功，获取数据
             $data = curl_multi_getcontent($ch);
         }
-        curl_close();
+        curl_close($ch);
         $curlData = json_decode($data,true);
         if(is_array($curlData)){
             return $curlData;
         }else{
             return $data;
+        }
+    }
+
+    private function xml_parse($str){
+        $xml_parse = xml_parser_create();
+        if(!xml_parse($xml_parse,$str,true)){
+            xml_parser_free($xml_parse);
+            return false;
+        }else{
+            return true;
         }
     }
 

@@ -29,7 +29,7 @@ class Message extends Wx{
     public function isSubscribe(){
         if($this->object->Event == self::EVENT_TYPE_SUBSCRIBE && $this->object->MsgType == 'event'){
             if(strlen($this->object->EventKey) == 0){
-                return true;
+                return 'true';
             }else{
                 $qrScene = explode('_',$this->object->EventKey);
                 return $qrScene[1];
@@ -49,17 +49,23 @@ class Message extends Wx{
 
     //用户已关注时的事件推送
     public function qrScene(){
-        return $this->object->Event == self::EVENT_TYPE_SCAN;
+        return $this->object->Event == self::EVENT_TYPE_SCAN && $this->object->MsgType == 'event';
+    }
+
+    //接收地理位置消息
+    public function isLocationMsg(){
+        return $this->object->Event == self::EVENT_TYPE_LOCATION && $this->object->MsgType == 'event';
     }
 
     //上传地理位置事件
     public function location(){
         if($this->object->Event == self::EVENT_TYPE_LOCATION){
-            return $location = [
-                    'Latitude' => $this->object->Latitude, //维度
+             return $location = $this->object->Longitude.','.$this->object->Latitude;
+               /* [
+                    'Latitude' => $this->object->Latitude , //维度
                     'Longitude' => $this->object->Longitude, //经度
                     'Precision' => $this->object->Precision //精度
-                ];
+                ];*/
         }
     }
 
@@ -82,10 +88,6 @@ class Message extends Wx{
     //接收小视频消息
     public function isShortVideoMsg(){
         return $this->object->MsgType == self::MSG_TYPE_SHORT_VIDEO;
-    }
-    //接收地理位置消息
-    public function isLocationMsg(){
-        return $this->object->MsgType == self::MSG_TYPE_LOCATION;
     }
     //接收链接消息
     public function isLinkMsg(){
@@ -113,7 +115,7 @@ class Message extends Wx{
                     <CreateTime>%s</CreateTime>
                     <MsgType><![CDATA[image]]></MsgType>
                     <Image>
-                    <MediaId><![CDATA[%s]]></MediaId>
+                        <MediaId><![CDATA[%s]]></MediaId>
                     </Image>
                 </xml>';
         $image = sprintf($xml, $this->object->FromUserName,$this->object->ToUserName,time(),$mediaId);
@@ -191,7 +193,11 @@ class Message extends Wx{
         ";
         $item_str = "";
         foreach ($newsArr as $item){
-            $item_str .= sprintf($itemTpl, $item['title'], $item['description'], $item['picUrl'], $item['url']);
+            $title = isset($item['title']) ? $item['title'] : '';
+            $description = isset($item['description']) ? $item['description'] : '';
+            $picUrl = isset($item['picUrl']) ? $item['picUrl'] : '';
+            $url = isset($item['url']) ? $item['url'] : '';
+            $item_str .= sprintf($itemTpl, $title, $description, $picUrl, $url);
         }
         $xml = '<xml>
                     <ToUserName><![CDATA[%s]]></ToUserName>

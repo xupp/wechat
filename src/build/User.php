@@ -24,13 +24,14 @@ class User extends Wx{
         $data = $this->curl($url);
         return $this->get($data);
     }
+
     //批量获取用户信息
     public function getUserInfoLists(array $data,$lang = 'zh-CN')
     {
         $url = $this->apiUrl.'/cgi-bin/user/info/batchget?access_token='.$this->getAccessToken();
         $user_list = [];
         foreach((array) $data as $openid){
-            $user_list['user_list'][] = ['openid'=>$openid,'lang'=>zh-CN];
+            $user_list['user_list'][] = ['openid'=>$openid,'lang'=>$lang];
         }
         $data = $this->curl($url,json_encode($user_list,JSON_UNESCAPED_UNICODE));
         return $this->get($data);

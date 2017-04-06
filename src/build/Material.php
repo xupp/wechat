@@ -1,6 +1,6 @@
 <?php
 /**
- * Author: shizhenyuan
+ * Author: xupp
  * Date: 2016/12/26
  * Time: 16:22
  */
@@ -11,7 +11,7 @@ use wechat\Wx;
 
 class Material extends Wx{
     //上传素材
-    public function upload($file,$type = 'image',$materialType = 0){
+    public function upload($file,$type = 'image',$materialType = 1){
         switch($materialType){
             case 0 :
                 //永久
@@ -22,7 +22,7 @@ class Material extends Wx{
                 $url = $this->apiUrl.'/cgi-bin/media/upload?access_token='.$this->getAccessToken().'&type='.$type;
                 break;
         }
-        $file = realpath($file);//将文件转为绝对路径
+        //$file = realpath($file);//将文件转为绝对路径
         if(class_exists('\CURLFile', false )){
             $data = [
                 'media' => new \CURLFile($file)
