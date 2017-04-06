@@ -3,6 +3,8 @@
 
 /*======================使用方法===========================*/
 
+composer require xupp/wechat
+
 require "./vendor/autoload.php";
 
 use wechat\Wx;
