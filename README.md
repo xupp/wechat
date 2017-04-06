@@ -8,9 +8,9 @@ require "./vendor/autoload.php";
 use wechat\Wx;
 
 $config = [
-	          'token' => 'weixin',
-	          'appId' => 'wx917fc314c6f429ff',
-	          'appSecret' => 'e7d5c0c720bb9cbd7248bf602b3f17b3'
+	          'token' => '您的token',
+	          'appId' => '您的appId',
+	          'appSecret' => '您的appSecret'
 	      ];
 $wx = new Wx($config);
 
