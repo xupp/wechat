@@ -1,9 +1,9 @@
 # wechat
 微信SDK
-
-/*======================使用方法===========================*/
 <pre><code>
-##**composer require xupp/wechat**
+/*======================使用方法===========================*/
+
+##composer require xupp/wechat
 
 require "./vendor/autoload.php";
 
