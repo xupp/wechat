@@ -1,0 +1,21 @@
+{
+    "name": "xupp/wechat",
+    "description": "this is a wechat sdk",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "xupp",
+            "email": "390241457@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php" : ">=5.4.0"
+    },
+    "autoload" : {
+        "psr-4" : {
+            "wechat\\" : "src"
+        }
+    }
+}
