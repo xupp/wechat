@@ -22,8 +22,12 @@ class Material extends Wx{
                 $url = $this->apiUrl.'/cgi-bin/media/upload?access_token='.$this->getAccessToken().'&type='.$type;
                 break;
         }
+<<<<<<< HEAD
 
 //        $file = realpath($file);//将文件转为绝对路径
+=======
+        //$file = realpath($file);//将文件转为绝对路径
+>>>>>>> origin/master
         if(class_exists('\CURLFile', false )){
             $data = [
                 'media' => new \CURLFile($file)
@@ -81,10 +85,17 @@ class Material extends Wx{
         }
         $url = $this->apiUrl.'/cgi-bin/material/batchget_material?access_token='.$this->getAccessToken();
         $data = '{
+<<<<<<< HEAD
                    "type":"'.$type.'",
                    "offset":'.$offset.',
                    "count":'.$count.'
                 }';dump($data);
+=======
+                   "type":'.$type.',
+                   "offset":'.$offset.',
+                   "count":'.$count.'
+                }';
+>>>>>>> origin/master
         $result = $this->curl($url,$data);
         return $this->get($result);
     }

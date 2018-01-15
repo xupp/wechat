@@ -68,9 +68,12 @@ class Wx extends Error{
             if(isset($data['errcode'])){
                 return false;
             }
+<<<<<<< HEAD
             if(!is_dir(dirname($file))){
                 mkdir(dirname($file),0777,true);
             }
+=======
+>>>>>>> origin/master
             file_put_contents($file,"<?php return \r\n".var_export($data,true).";\r\n?>");
         }
         return $data['access_token'];
