@@ -11,15 +11,11 @@ use wechat\Wx;
 
 class Jssdk extends Wx{
 
-<<<<<<< HEAD
+
     public function getSignPackage($url = '') {
         $jsapiTicket = $this->getJsApiTicket();
         $url = $url ? $url : "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-=======
-    public function getSignPackage() {
-        $jsapiTicket = $this->getJsApiTicket();
-        $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
->>>>>>> origin/master
+
         $timestamp = time();
         $nonceStr = $this->createNonceStr();
 
@@ -50,25 +46,11 @@ class Jssdk extends Wx{
 
     private function getJsApiTicket() {
         // jsapi_ticket
-<<<<<<< HEAD
+
         $url = $this->apiUrl."/cgi-bin/ticket/getticket?type=jsapi&access_token=".$this->getAccessToken();
         $data = $this->curl($url);
         if($data['errcode'] !== 0){
             return false;
-=======
-        $cachename = md5(self::$config['appSecret'].self::$config['appId']);
-        $file = __DIR__.'/../cache/'.$cachename.'.php';
-
-        if(is_file($file) && filemtime($file) + 7000 > time()){
-            $data = include $file;
-        }else{
-            $url = $this->apiUrl."/cgi-bin/ticket/getticket?type=jsapi&access_token=".$this->getAccessToken();
-            $data = $this->curl($url);
-            if($data['errcode'] !== 0){
-                return false;
-            }
-            file_put_contents($file,"<?php return \r\n".var_export($data,true).";\r\n?>");
->>>>>>> origin/master
         }
         return $data['ticket'];
     }

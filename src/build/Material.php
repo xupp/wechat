@@ -22,12 +22,9 @@ class Material extends Wx{
                 $url = $this->apiUrl.'/cgi-bin/media/upload?access_token='.$this->getAccessToken().'&type='.$type;
                 break;
         }
-<<<<<<< HEAD
 
-//        $file = realpath($file);//将文件转为绝对路径
-=======
         //$file = realpath($file);//将文件转为绝对路径
->>>>>>> origin/master
+
         if(class_exists('\CURLFile', false )){
             $data = [
                 'media' => new \CURLFile($file)
