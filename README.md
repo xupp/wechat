@@ -1,10 +1,12 @@
 # wechat
-微信SDK
+
+> 微信SDK
 
 
 /*======================使用方法===========================*/
 
-##composer require xupp/wechat
+```
+## composer require xupp/wechat
 
 
 require "./vendor/autoload.php";
@@ -27,4 +29,4 @@ if($message->isTextMsg()){
 	$message->text('我的微信sdk发布了');
 
 }
-
+```
