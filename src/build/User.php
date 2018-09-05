@@ -63,4 +63,17 @@ class User extends Wx{
         $result = $this->curl($url,$data);
         return $this->get($result);
     }
+    //设置用户备注名
+    public function updateremark($openid, $remark){
+        if (!$openid || $remark){
+            return;
+        }
+        $url = $this->apiUrl.'/cgi-bin/user/info/updateremark?access_token='.$this->getAccessToken();
+        $data = '{
+            "openid":'.$openid.',
+            "remark":'.$remark.'
+        }';
+        $result = $this->curl($url,$data);
+        return $this->get($result);
+    }
 }

@@ -59,7 +59,6 @@ class Wx extends Error{
         //缓存access_token
         $cachename = md5(self::$config['appId'].self::$config['appSecret']);
         $file = __DIR__.'/cache/'.$cachename.'.php';
-
         if(is_file($file) && filemtime($file) + 7000 > time()){
             $data = include $file;
         }else{
@@ -68,11 +67,9 @@ class Wx extends Error{
             if(isset($data['errcode'])){
                 return false;
             }
-
             if(!is_dir(dirname($file))){
                 mkdir(dirname($file),0777,true);
             }
-
             file_put_contents($file,"<?php return \r\n".var_export($data,true).";\r\n?>");
         }
         return $data['access_token'];

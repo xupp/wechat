@@ -1,1 +1,3 @@
-src/cache
+.idea/
+/vendor/
+/src/cache/*

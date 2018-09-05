@@ -22,9 +22,7 @@ class Material extends Wx{
                 $url = $this->apiUrl.'/cgi-bin/media/upload?access_token='.$this->getAccessToken().'&type='.$type;
                 break;
         }
-
         //$file = realpath($file);//将文件转为绝对路径
-
         if(class_exists('\CURLFile', false )){
             $data = [
                 'media' => new \CURLFile($file)
@@ -68,6 +66,54 @@ class Material extends Wx{
         return $this->get($result);
     }
 
+    //新增永久图文素材
+    public function addNewsMaterial(array $newsArr){
+        if (!is_array($newsArr) || empty($newsArr)){
+            return;
+        }
+        $url = $this->apiUrl.'/cgi-bin/material/add_news?access_token='.$this->getAccessToken();
+        $arr = [];
+        foreach ($newsArr as $k => $v) {
+            $arr[$k] = '{
+                "title": '.$v['title'].',
+                "thumb_media_id": '.$v['thumb_media_id'].',
+                "author": '.$v['author'].',
+                "digest": '.$v['digest'].',
+                "show_cover_pic": '.$v['show_cover_pic'].',
+                "content": '.$v['content'].',
+                "content_source_url": '.$v['content_source_url'].'
+            }';
+        }
+        $data = '{
+            "articles": '.$arr.'
+        }';
+        $result = $this->curl($url,$data);
+        return $this->get($result);
+    }
+
+    //修改永久图文素材
+    public function editMaterial($media_id, array $articles = [], $index = 0){
+        if (!$media_id || empty($articles)) {
+            return;
+        }
+        $url = $this->apiUrl.'/cgi-bin/material/update_news?access_token='.$this->getAccessToken();
+        $data = '{
+            "media_id": '.$media_id.',
+            "index": '.$index.',
+            "articles": {
+               "title": '.$articles['title'].',
+               "thumb_media_id": '.$articles['thumb_media_id'].',
+               "author": '.$articles['author'].',
+               "digest": '.$articles['digest'].',
+               "show_cover_pic": '.$articles['show_cover_pic'].',
+               "content": '.$articles['content'].',
+               "content_source_url": '.$articles['content_source_url'].'
+            }
+        }';
+        $result = $this->curl($url,$data);
+        return $this->get($result);
+    }
+
     //获取素材总数
     public function getMaterialCount(){
         $url = $this->apiUrl.'/cgi-bin/material/get_materialcount?access_token='.$this->getAccessToken();
@@ -82,17 +128,10 @@ class Material extends Wx{
         }
         $url = $this->apiUrl.'/cgi-bin/material/batchget_material?access_token='.$this->getAccessToken();
         $data = '{
-<<<<<<< HEAD
-                   "type":"'.$type.'",
-                   "offset":'.$offset.',
-                   "count":'.$count.'
-                }';dump($data);
-=======
                    "type":'.$type.',
                    "offset":'.$offset.',
                    "count":'.$count.'
                 }';
->>>>>>> origin/master
         $result = $this->curl($url,$data);
         return $this->get($result);
     }

@@ -29,7 +29,7 @@ class Message extends Wx{
     public function isSubscribe(){
         if($this->object->Event == self::EVENT_TYPE_SUBSCRIBE && $this->object->MsgType == 'event'){
             if(strlen($this->object->EventKey) == 0){
-                return 'true';
+                return 'subscribe';
             }else{
                 $qrScene = explode('_',$this->object->EventKey);
                 return $qrScene[1];
@@ -210,8 +210,6 @@ class Message extends Wx{
         $voice = sprintf($xml, $this->object->FromUserName,$this->object->ToUserName,time(),count($newsArr));
         echo $voice;
     }
-
-
 
     //点击事件消息
     public function click(){

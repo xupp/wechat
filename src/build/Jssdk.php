@@ -11,12 +11,11 @@ use wechat\Wx;
 
 class Jssdk extends Wx{
 
-
     public function getSignPackage($url = '') {
         $jsapiTicket = $this->getJsApiTicket();
         $url = $url ? $url : "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
         $timestamp = time();
+
         $nonceStr = $this->createNonceStr();
 
         // 这里参数的顺序要按照 key 值 ASCII 码升序排序
@@ -46,11 +45,18 @@ class Jssdk extends Wx{
 
     private function getJsApiTicket() {
         // jsapi_ticket
+        $cachename = md5(self::$config['appSecret'].self::$config['appId']);
+        $file = __DIR__.'/../cache/'.$cachename.'.php';
 
-        $url = $this->apiUrl."/cgi-bin/ticket/getticket?type=jsapi&access_token=".$this->getAccessToken();
-        $data = $this->curl($url);
-        if($data['errcode'] !== 0){
-            return false;
+        if(is_file($file) && filemtime($file) + 7000 > time()){
+            $data = include $file;
+        }else{
+            $url = $this->apiUrl."/cgi-bin/ticket/getticket?type=jsapi&access_token=".$this->getAccessToken();
+            $data = $this->curl($url);
+            if($data['errcode'] !== 0){
+                return false;
+            }
+            file_put_contents($file,"<?php return \r\n".var_export($data,true).";\r\n?>");
         }
         return $data['ticket'];
     }
